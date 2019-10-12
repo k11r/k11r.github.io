@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    
+    body {
+			background-color:#ffffff;
+			margin: 0;
+			padding: 20px;
+		
+		}
+    .accordion {
+    background-color: ##ffffff;
+    color: #000000;
+    cursor: pointer;
+    padding: 10px;
+    
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 17px;
+    transition: 0.4s;
+}
+
+.active, .accordion:hover {
+    background-color: #ffffff; 
+}
+
+.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: #ffffff;
+}
+    
+    
+</style>
+
+
+
+</head>
+<body>
+
+
+ <center>
+
+	 <img src="https://s25.postimg.cc/kjxjb4s5b/grocerycartgames_2.jpg"height=100%>
+	 <br>
+	  Simple games to play with graph paper and randomization objects.
+	 
+       <font face="comic sans ms"  size=6>
+       <br>
+       -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -  
+       
+      </center><br>
+       
+       <center>
+       <button class="accordion"><center><font size="4px">PICOGRAPHY</font></center></button>
+<div class="panel">
+ <br>
+<img src="https://s25.postimg.cc/z34oc5vgd/PICOGRAPHY.jpg"width="600px">
+
+</div>
+<br><br>
+<button class="accordion"><center><font size="4px">OUROBOROS</font></center></button>
+<div class="panel">
+ <br>
+
+    
+    
+    <img src="https://s25.postimg.cc/magkctrql/OUROBOROS.jpg"width="600px">
+    
+
+
+</div>
+<br><br>
+<button class="accordion"><center><font size="4px">HOUSE BUILDER</font></center></button>
+<div class="panel">
+ <br>
+
+    
+    <img src="https://s25.postimg.cc/z34oc6365/HOUSEBUILDER.jpg"width="600px">
+    
+
+
+</div>
+<br><br>
+<button class="accordion"><center><font size="4px">MICROSCOPE</font></center></button>
+<div class="panel">
+ <br>
+
+    <img src="https://s25.postimg.cc/jt4t5k04d/MICROSCOPE.jpg"width="600px">
+    
+</center>
+
+</div>
+
+       
+       </font>
+       
+       
+      
+	
+			
+			
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+
+     <script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    });
+}
+</script>
+
+
+</body>
+</html>
+  
+  

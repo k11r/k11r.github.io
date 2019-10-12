@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+
+<style type="text/css">body, a:hover {cursor: url(https://s32.postimg.cc/63y3ye411/foo637.png), progress !important;}</style>
+  <head>
+  
+
+
+<style type="text/css">
+#primary {
+    float: left;
+    width: 248px;
+}
+
+#content {
+    float: left;
+    width: 480px;
+ 
+}
+
+#secondary {
+    float: left;
+    width: 240px;
+}
+ #container {
+        width: 230px;
+        height: 90px;
+        display: table;
+        background-color: #FFFF99;         
+    }
+    
+    #container2 {
+        width: 450px;
+        height: 250px;
+        display: table;
+        background-color: #BDEDFF;         
+    }
+    
+    div {
+    margin: 15px;
+}
+    lol {
+    right: 30px;
+}
+    
+
+</style>
+
+
+
+    <meta charset="UTF-8">
+    <title>Funky Chair</title>
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+
+  <body>
+
+    <div id="primary">
+       <img src=
+       >
+       
+       <img src="https://s32.postimg.cc/lm84fjf2t/spider.gif">
+       
+       
+       
+       <br>
+       <font face= "Times New Roman" size=3 color=blue >Graff zone</font>
+       
+       
+       <script type="text/javascript" src="drawing.js"></script>
+	 
+	  
+	  
+			<p >
+				<label><strong></strong> <select id="dtool">
+					  <option value="spray">Spray</option>
+					   <option value="Fat">Fat</option>
+					  <option value="pencil">Marker</option>
+					  <option value="Mop">Mop</option>
+					  <option value="roller">Roller</option>
+					 
+					 
+					  
+					  
+				</select></label>
+				<label><strong></strong> <select onChange="changeColor(this.value)">
+					  <option onclick="#33cc33;clicksound.playclip();">Green</option>
+					  <option onclick="#cc0099;clicksound.playclip();">Purple</option>
+					  <option onclick="#ffcc00;clicksound.playclip();">Yellow</option>
+					  <option onclick="#3366ff;clicksound.playclip();">Blue</option>
+					  <option onclick="#ff0000;clicksound.playclip();">Red</option>
+					  <option onclick="#ff99ff;clicksound.playclip();">Pink</option>
+					  <option onclick="#003399;clicksound.playclip();">Navy</option>
+					  <option onclick="#000000;clicksound.playclip();"selected>Black</option>
+					  <option onclick="#ffffff;clicksound.playclip();">White</option>
+				</select></label>
+			</p>
+			
+			<div >
+			<canvas id="imageView"  width="243" height="350" style=  "background-image:url('https://s32.postimg.cc/mz0lgs2bp/Screen_Shot_2016_06_21_at_9_42_20_AM.png');" />
+			</div>
+  
+<script>
+//These are the variables used throughout the javascript
+//var points = new Array();
+var outlineImage = new Image();
+radius =15
+var colorPurple = "#cc0099"; //variable for purple colour 
+var colorGreen = "#33cc33"; //variable for green colour 
+var colorYellow = "#ffcc00";//variable for yellow colour 
+var colorBlack = "#000000";//variable for black colour 
+var colorBlue = "#3366ff";//variable for blue colour 
+var colorRed = "#ff0000";
+var colorBrick = "#990000";
+var colorPink = "#ff99ff";
+var colorNavy = "#003399";
+var colorCucumber = "#ccff99";
+var colorMelon = "#ffcc66";
+var colorWhite = "#ffffff";
+var CurrentColor = colorBlack; //variable for current colour 
+
+//used to change the colour of the drawing tool
+function changeColor( color_code ) {
+	CurrentColor =color_code;
+}
+
+
+//this function will allow you clear the canvas 
+function clearCanvas(){
+ context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+if (window.addEventListener) {
+    window.addEventListener('load', function () {
+        var canvas, context;
+		
+		  // The active tool instance.
+          var tool;
+          var tool_default = 'spray';
+
+        function init() {
+            // Find the canvas element.
+            canvas = document.getElementById('imageView');//this is used to get a element id for 'imageView' the cnavas
+            if (!canvas) {
+                alert('Error: I cannot find the canvas element!');//if it fails to get the canvas then it will diplay this error
+                return;
+            }
+
+            if (!canvas.getContext) {
+                alert('Error: no canvas.getContext!');//if it fails to get the context then it will diplay this error
+                return;
+            }
+
+
+            // Get the 2D canvas context.
+            context = canvas.getContext('2d');// used to get canavs context to '2d'
+            if (!context) {
+                alert('Error: failed to getContext!');//if it fails to get the context then it will diplay this error
+                return;
+            }
+
+        // Get the tool select input.
+    var tool_select = document.getElementById('dtool');
+    if (!tool_select) {
+      alert('Error: failed to get the dtool element!');
+      return;
+    }
+    tool_select.addEventListener('change', ev_tool_change, false);
+
+    // Activate the default tool.
+    if (tools[tool_default]) {
+      tool = new tools[tool_default]();
+      tool_select.value = tool_default;
+    }
+
+            // Attach the mousedown, mousemove and mouseup event listeners.
+            canvas.addEventListener('mousedown', ev_canvas, false);
+            canvas.addEventListener('mousemove', ev_canvas, false);
+            canvas.addEventListener('mouseup', ev_canvas, false);
+        }
+
+
+ // The event handler for any changes made to the tool selector.
+  function ev_tool_change (ev) {
+    if (tools[this.value]) {
+      tool = new tools[this.value]();
+    }
+  }
+  
+   // This object holds the implementation of each drawing tool.
+  var tools = {};
+
+        // This painting tool works like a drawing pencil which tracks the mouse
+        // movements.
+         tools.pencil = function() {
+            var tool = this;
+            this.started = false;
+
+            // This is called when you start holding down the mouse button.
+            // This starts the pencil drawing.
+            this.mousedown = function (ev) {
+                context.beginPath();
+				context.strokeStyle = CurrentColor;
+                context.moveTo(ev._x, ev._y);
+                tool.started = true;
+            };
+
+            // This function is called every time you move the mouse. Obviously, it only
+            // draws if the tool.started state is set to true (when you are holding down
+            // the mouse button).
+            this.mousemove = function (ev) {
+                if (tool.started) {
+					context.strokeStyle = CurrentColor;
+                    context.lineTo(ev._x, ev._y);				
+                    context.stroke();
+                }
+            };
+
+            // This is called when you release the mouse button.
+            this.mouseup = function (ev) {
+                if (tool.started) {
+                    tool.mousemove(ev);
+                    tool.started = false;
+                }
+            };
+        };
+      tools.spray = function(){};
+      tools.spray.prototype = new tools.pencil(); 
+      tools.spray.prototype.mousemove = function (ev) {
+        if (tool.started) {
+          context.fillStyle = CurrentColor;
+          context.rect(ev._x, ev._y, 0, 0);		
+        
+          for (var i = 20; i--;) { 
+           context.rect(ev._x +  Math.random() *10 - 10, 
+                         ev._y +  Math.random() *10 - 10, .3, .3);
+            context.fill();
+          }
+          
+        }
+      };
+      tools.Fat = function(){};
+      tools.Fat.prototype = new tools.pencil(); 
+      tools.Fat.prototype.mousemove = function (ev) {
+        if (tool.started) {
+          context.fillStyle = CurrentColor;
+          context.rect(ev._x, ev._y, 0, 0);		
+        
+          for (var i = 60; i--;) { 
+           context.rect(ev._x +  Math.random() *25 - 25, 
+                         ev._y +  Math.random() *25 - 25, .5, .5);
+            context.fill();
+          }
+          
+        }
+      };
+     tools.roller = function(){};
+      tools.roller.prototype = new tools.pencil(); 
+      tools.roller.prototype.mousemove = function (ev) {
+        if (tool.started) {
+          context.fillStyle = CurrentColor;
+          context.rect(ev._x, ev._y, 60, 30);		
+        
+          for (var i =  5; i--;) { 
+            
+            context.fill();
+          }
+          
+        }
+      };
+      
+           tools.Mop = function(){};
+      tools.Mop.prototype = new tools.pencil(); 
+      tools.Mop.prototype.mousemove = function (ev) {
+        if (tool.started) {
+          context.fillStyle = CurrentColor;
+        context.rect(ev._x, ev._y, 20,20 );
+        
+          for (var i =  100; i--;) { 
+             
+            
+            context.fill();
+          }
+          
+        }
+      };
+      
+     
+		
+        // The general-purpose event handler. This function just determines the mouse
+        // position relative to the canvas element.
+        function ev_canvas(ev) {
+            if (navigator.appName == 'Microsoft Internet Explorer' || navigator.vendor == 'Google Inc.' || navigator.vendor == 'Apple Computer, Inc.') { // IE or Chrome
+                ev._x = ev.offsetX;
+                ev._y = ev.offsetY;
+            } else if (ev.layerX || ev.layerX == 0) { // Firefox
+                ev._x = ev.layerX - this.offsetLeft;
+                ev._y = ev.layerY - this.offsetTop;
+            } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+                ev._x = ev.offsetX;
+                ev._y = ev.offsetY;
+            }
+            // Call the event handler of the tool.
+            var func = tool[ev.type];
+            if (func) {
+                func(ev);
+            }
+           // points.push(ev);
+        }
+
+        init();
+
+    }, false);
+    }
+</script> 
+<br> &nbsp &nbsp Play! Also say hi >>>
+<br><br>
+<img src=http://s8.postimg.cc/dc70q4g7l/bear.gif>
+
+
+
+
+<br><br>
+
+
+
+</div>
+
+
+     <div id="content">
+     
+    
+
+ 
+     
+     
+        <center>
+    <font face="Comic Sans MS"  size=5 style="vertical-align:middle">Welcome Back!</font>
+       </center>
+      
+      
+ <center>
+    <font face="Times New Roman" color="blue" size=3 style="vertical-align:middle">~Have a seat~</font>
+       </center>
+  
+   <br>  <br>
+    <font face="Monospace" color="D3D3D3" size=3 style="vertical-align:middle">Secret Message: We've learned more in the past thousand years, there's a mindset that includes "anything is possible" in future conjecture that inspires a quick changing landscape. </font>
+    <br>
+    <br>
+    <br>
+    
+    <font color="blue" size=4>✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂✂</font>
+    
+  
+    
+    <br>
+    
+     <div id="container2">
+    <center>
+   <br>
+    
+   
+   <script language="javascript">
+
+
+var curindex=0
+
+var randomimages=new Array()
+
+	
+	randomimages[1]="http://s3.postimg.cc/r9vqec3db/Screen_Shot_2015_11_28_at_4_25_13_PM.png"
+	randomimages[2]="http://s29.postimg.cc/jw8u0fibn/Screen_Shot_2015_11_28_at_4_24_55_PM.png"
+	randomimages[3]="http://s3.postimg.cc/55q5v74lr/Screen_Shot_2015_11_28_at_4_24_47_PM.png"
+	randomimages[4]="http://s14.postimg.cc/5l2af7mtt/Screen_Shot_2015_11_28_at_4_24_38_PM.png"
+	randomimages[5]="http://s8.postimg.cc/ovbd7i8j5/Screen_Shot_2015_11_28_at_4_24_22_PM.png"
+	randomimages[6]="http://s8.postimg.cc/rui9umi0l/Screen_Shot_2015_11_28_at_4_24_02_PM.png"
+	randomimages[7]="http://s15.postimg.cc/etvge0o0n/Screen_Shot_2015_11_28_at_4_23_45_PM.png"
+		randomimages[8]="http://s22.postimg.cc/gnbohwclt/Screen_Shot_2015_11_28_at_4_23_36_PM.png"
+	randomimages[9]="http://s29.postimg.cc/fxg7vcj2b/Screen_Shot_2015_11_28_at_4_23_13_PM.png"
+		randomimages[10]="http://s18.postimg.cc/4zvovotq1/Screen_Shot_2015_11_28_at_4_23_05_PM.png"
+		randomimages[11]="http://s30.postimg.cc/wgnuy0flt/Screen_Shot_2015_11_28_at_4_22_49_PM.png"
+	randomimages[12]="http://s11.postimg.cc/lb4w2mzdf/Screen_Shot_2015_11_28_at_4_22_39_PM.png"
+		randomimages[13]="http://s9.postimg.cc/lx3scmzy7/Screen_Shot_2015_11_28_at_4_22_28_PM.png"
+	randomimages[14]="http://s30.postimg.cc/kimak4bup/Screen_Shot_2015_11_28_at_4_22_21_PM.png"
+		randomimages[15]="http://s4.postimg.cc/5e2id33jt/Screen_Shot_2015_11_28_at_4_21_48_PM.png"
+	randomimages[16]="http://s3.postimg.cc/44z3xk2dv/Screen_Shot_2015_11_28_at_4_21_29_PM.png"
+			randomimages[17]="http://s1.postimg.cc/xcshxnxy3/Screen_Shot_2015_11_28_at_4_20_49_PM.png"
+		randomimages[18]="http://s9.postimg.cc/fd5lk1baz/Screen_Shot_2015_11_28_at_4_20_26_PM.png"
+	randomimages[19]="http://s27.postimg.cc/beuj6ozj7/Screen_Shot_2015_11_28_at_4_20_15_PM.png"
+			randomimages[20]="http://s13.postimg.cc/ezhwqzoqv/Screen_Shot_2015_11_28_at_4_19_50_PM.png"
+	randomimages[21]="http://s9.postimg.cc/gur1vlg1r/Screen_Shot_2015_11_28_at_4_19_40_PM.png"
+		randomimages[22]="http://s7.postimg.cc/ci5byffsr/Screen_Shot_2015_11_28_at_4_19_31_PM.png"
+	randomimages[23]="http://s8.postimg.cc/5vpncn5bp/Screen_Shot_2015_11_28_at_4_19_20_PM.png"
+	randomimages[24]="http://s21.postimg.cc/s8fihg1xj/Screen_Shot_2015_11_28_at_4_18_53_PM.png"
+		randomimages[25]="http://s12.postimg.cc/uavphpm7t/Screen_Shot_2015_11_28_at_4_18_43_PM.png"
+	
+	
+
+var preload=new Array()
+
+for (n=0;n<randomimages.length;n++)
+{
+	preload[n]=new Image()
+	preload[n].src=randomimages[n]
+}
+
+document.write('<img name="defaultimage" src="'+randomimages[Math.floor(Math.random()*(randomimages.length))]+'">')
+
+function rotateimage()
+{
+
+if (curindex==(tempindex=Math.floor(Math.random()*(randomimages.length)))){
+curindex=curindex==0? 1 : curindex-1
+}
+else
+curindex=tempindex
+
+	document.images.defaultimage.src=randomimages[curindex]
+}
+
+setInterval("rotateimage()",delay)
+
+</script>
+<br>
+<br>
+<font color=white >funky chair art museum</font>
+</center>
+    </div>
+    
+    
+    
+<center>
+
+   
+    <!-- begin wwww.htmlcommentbox.com -->
+ <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">Comment Form</a> is loading comments...</div>
+ <script type="text/javascript" id="hcb"> /*<!--*/ if(!window.hcb_user){hcb_user={};} (function(){var s=document.createElement("script"), l=hcb_user.PAGE || (""+window.location).replace(/'/g,"%27"), h="//www.htmlcommentbox.com";s.setAttribute("type","text/javascript");s.setAttribute("src", h+"/jread?page="+encodeURIComponent(l).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24fifZnIcEfMct71ECf8pB0%2F"+"&opts=4&num=5&ts=1466520214943");if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})(); /*-->*/ </script>
+<!-- end www.htmlcommentbox.com -->
+    
+    </center>
+<br>
+
+   </div>
+<div id="secondary">
+
+
+  <br>
+  
+  ✽ ✾ ✿ ❁ ❃ ❋ ❀ ✽ ✾ ✿ ❁ ❃ ❋ ❀
+  <br>
+  <br>
+   <img src="https://s15.postimg.cc/yoe0muiu3/floralmail.gif">
+  <a href="mailto:specialrutabaga2@gmail.com?Subject=Hello%20again" target="_top">Send Mail</a>
+ 
+  <br><br>
+  
+  ✽ ✾ ✿ ❁ ❃ ❋ ❀ ✽ ✾ ✿ ❁ ❃ ❋ ❀
+  <br>
+  <br>
+
+
+
+<br><br>
+<img src=https://s32.postimg.cc/m6xpvo9k5/ezgif_3860312158.gif align="right"> <img src=https://s31.postimg.cc/3r27ukdrv/r92.gif align="right"> 
+
+<center>
+<div id="container">
+
+
+<font face="Comic Sans MS" color="Blue" size=3 style="vertical-align:middle">Your fortune:</font>
+<br>
+
+<script>
+
+
+
+var curindex=0
+
+var randomimages=new Array()
+
+	randomimages[0]="http://s23.postimg.cc/dqq7qc2a3/image.jpg"
+	randomimages[1]="http://s23.postimg.cc/u0771qy6j/image.jpg"
+	randomimages[2]="http://s23.postimg.cc/m2cs03kwb/image.jpg"
+	randomimages[3]="http://s23.postimg.cc/qzqcl7mvf/image.jpg"
+		randomimages[4]="http://s23.postimg.cc/uutqns617/image.jpg"
+	randomimages[5]="http://s23.postimg.cc/9jrl5ryiz/image.jpg"
+		randomimages[6]="http://s23.postimg.cc/z927zmgln/image.jpg"
+	randomimages[7]="http://s23.postimg.cc/qr1ymrouj/image.jpg"
+	randomimages[8]="http://s23.postimg.cc/7xg5prqmj/image.jpg"
+		randomimages[9]="http://s23.postimg.cc/vqzeupuh7/image.jpg"
+	randomimages[10]="http://s23.postimg.cc/t5tu7753f/image.jpg"
+		randomimages[11]="http://s23.postimg.cc/lbt8lsxaj/image.jpg"
+	randomimages[12]="http://s23.postimg.cc/d2crtne6j/image.jpg"
+		randomimages[13]="http://s23.postimg.cc/mo6c9y5cb/image.jpg"
+	randomimages[14]="http://s23.postimg.cc/r7ikvgn7v/image.jpg"
+		randomimages[15]="http://s23.postimg.cc/qly7d3hjf/image.jpg"
+	randomimages[16]="http://s23.postimg.cc/m5190odxn/image.jpg"
+		randomimages[17]="http://s23.postimg.cc/6ktva53t7/image.jpg"
+	randomimages[18]="http://s23.postimg.cc/s3f2awwwb/image.jpg"
+			randomimages[19]="http://s23.postimg.cc/lqzx12tu3/image.jpg"
+	randomimages[20]="http://s23.postimg.cc/iex0u1cp7/image.jpg"
+		randomimages[21]="http://s23.postimg.cc/3lmyn0ubv/image.jpg"
+			randomimages[22]="http://s23.postimg.cc/d4wnghhu3/image.jpg"
+	
+	
+	
+
+var preload=new Array()
+
+for (n=0;n<randomimages.length;n++)
+{
+	preload[n]=new Image()
+	preload[n].src=randomimages[n]
+}
+
+document.write('<img name="defaultimage" src="'+randomimages[Math.floor(Math.random()*(randomimages.length))]+'">')
+
+function rotateimage()
+{
+
+if (curindex==(tempindex=Math.floor(Math.random()*(randomimages.length)))){
+curindex=curindex==0? 1 : curindex-1
+}
+else
+curindex=tempindex
+
+	document.images.defaultimage.src=randomimages[curindex]
+}
+
+setInterval("rotateimage()",delay)
+
+
+
+</script>
+
+
+
+</div>
+
+<br><br>
+
+<a href="http://specialrutabaga.tumblr.com/tokencorruptiongateway"target= "blank">
+<img src="https://s25.postimg.cc/niclkjean/door1.png" height="120px"
+     onmouseover="this.src='https://s25.postimg.cc/8me2cyalr/door2.png'"
+  onmouseout="this.src='https://s25.postimg.cc/niclkjean/door1.png'">
+</a>
+
+
+</div>
+
+
+  </body>
+
+</html>
