@@ -1,1 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <title>Bedazzled Seashell</title>
+  <script src="js/babylon.js"></script>
+  <style>
+   
+    html.body.canvas {
+           width:100%;
+           height:100%;
+           padding:0;
+           margin:0;
+           overflow: hidden;
+    }
+    </style>
+ <img src="https://i.postimg.cc/W38zqtfz/IMG-4178.jpg" width=900px>
 
+    
+  </body>
+
+</html>
