@@ -2,8 +2,7 @@
 <html>
   <head>
   <meta charset="utf-8">
-  <title>Bedazzled Seashell</title>
-  <script src="js/babylon.js"></script>
+  <title>My Links</title>
   <style>
    
     html.body.canvas {
